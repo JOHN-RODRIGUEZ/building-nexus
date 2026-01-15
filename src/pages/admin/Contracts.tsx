@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Search, Trash2, Edit } from 'lucide-react';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { useContractStore, Contract } from '@/stores/contractStore';
 import { useEnvironmentStore } from '@/stores/environmentStore';
 import { Button } from '@/components/ui/button';
@@ -81,10 +82,10 @@ export default function ContractsManagement() {
     
     if (editingContract) {
       updateContract(editingContract.id, formData);
-      toast.success('Contract updated successfully');
+      toast.success('Contrato actualizado exitosamente');
     } else {
       addContract(formData);
-      toast.success('Contract created successfully');
+      toast.success('Contrato creado exitosamente');
     }
     
     setIsModalOpen(false);
@@ -92,7 +93,7 @@ export default function ContractsManagement() {
 
   const handleDelete = (id: string) => {
     deleteContract(id);
-    toast.success('Contract deleted');
+    toast.success('Contrato eliminado');
   };
 
   const getStatusBadge = (status: Contract['status']) => {
@@ -101,10 +102,16 @@ export default function ContractsManagement() {
       expiring: 'bg-warning/10 text-warning border border-warning/20',
       expired: 'status-expired',
     };
+
+    const labels = {
+      active: 'Activo',
+      expiring: 'Por Vencer',
+      expired: 'Vencido',
+    };
     
     return (
       <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
+        {labels[status]}
       </span>
     );
   };
@@ -118,12 +125,12 @@ export default function ContractsManagement() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Contracts</h1>
-            <p className="text-muted-foreground">Manage rental contracts and agreements</p>
+            <h1 className="text-3xl font-bold mb-2">Contratos</h1>
+            <p className="text-muted-foreground">Gestiona contratos de arrendamiento y acuerdos</p>
           </div>
           <Button onClick={() => handleOpenModal()} className="rounded-xl gap-2">
             <Plus className="h-5 w-5" />
-            New Contract
+            Nuevo Contrato
           </Button>
         </div>
       </motion.div>
@@ -133,7 +140,7 @@ export default function ContractsManagement() {
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Search contracts..."
+          placeholder="Buscar contratos..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="input-futuristic w-full pl-12"
@@ -145,7 +152,7 @@ export default function ContractsManagement() {
         <div className="card-elevated animate-pulse h-64 bg-muted" />
       ) : filteredContracts.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-muted-foreground text-lg">No contracts found</p>
+          <p className="text-muted-foreground text-lg">No se encontraron contratos</p>
         </div>
       ) : (
         <div className="card-elevated overflow-hidden">
@@ -153,12 +160,12 @@ export default function ContractsManagement() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-border bg-muted/50">
-                  <th className="text-left p-4 font-medium text-muted-foreground">Environment</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Tenant</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Period</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Rent</th>
-                  <th className="text-left p-4 font-medium text-muted-foreground">Status</th>
-                  <th className="text-right p-4 font-medium text-muted-foreground">Actions</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Ambiente</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Inquilino</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Período</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Renta</th>
+                  <th className="text-left p-4 font-medium text-muted-foreground">Estado</th>
+                  <th className="text-right p-4 font-medium text-muted-foreground">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -178,14 +185,14 @@ export default function ContractsManagement() {
                     </td>
                     <td className="p-4">
                       <p className="text-sm">
-                        {format(new Date(contract.startDate), 'MMM d, yyyy')} –
+                        {format(new Date(contract.startDate), "d MMM, yyyy", { locale: es })} –
                       </p>
                       <p className="text-sm">
-                        {format(new Date(contract.endDate), 'MMM d, yyyy')}
+                        {format(new Date(contract.endDate), "d MMM, yyyy", { locale: es })}
                       </p>
                     </td>
                     <td className="p-4">
-                      <p className="font-semibold">${contract.monthlyRent.toLocaleString()}/mo</p>
+                      <p className="font-semibold">${contract.monthlyRent.toLocaleString()}/mes</p>
                     </td>
                     <td className="p-4">
                       {getStatusBadge(contract.status)}
@@ -223,23 +230,23 @@ export default function ContractsManagement() {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {editingContract ? 'Edit Contract' : 'New Contract'}
+              {editingContract ? 'Editar Contrato' : 'Nuevo Contrato'}
             </DialogTitle>
           </DialogHeader>
           
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Environment</label>
+              <label className="text-sm font-medium">Ambiente</label>
               <select
                 value={formData.environmentId}
                 onChange={(e) => handleEnvironmentChange(e.target.value)}
                 className="input-futuristic w-full"
                 required
               >
-                <option value="">Select environment...</option>
+                <option value="">Seleccionar ambiente...</option>
                 {environments.map(env => (
                   <option key={env.id} value={env.id}>
-                    {env.name} - ${env.rentalPrice}/mo
+                    {env.name} - ${env.rentalPrice}/mes
                   </option>
                 ))}
               </select>
@@ -247,7 +254,7 @@ export default function ContractsManagement() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Tenant Name</label>
+                <label className="text-sm font-medium">Nombre del Inquilino</label>
                 <input
                   type="text"
                   value={formData.tenantName}
@@ -258,7 +265,7 @@ export default function ContractsManagement() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Tenant Email</label>
+                <label className="text-sm font-medium">Correo del Inquilino</label>
                 <input
                   type="email"
                   value={formData.tenantEmail}
@@ -271,7 +278,7 @@ export default function ContractsManagement() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Start Date</label>
+                <label className="text-sm font-medium">Fecha Inicio</label>
                 <input
                   type="date"
                   value={formData.startDate}
@@ -282,7 +289,7 @@ export default function ContractsManagement() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">End Date</label>
+                <label className="text-sm font-medium">Fecha Fin</label>
                 <input
                   type="date"
                   value={formData.endDate}
@@ -294,7 +301,7 @@ export default function ContractsManagement() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Monthly Rent ($)</label>
+              <label className="text-sm font-medium">Renta Mensual ($)</label>
               <input
                 type="number"
                 value={formData.monthlyRent}
@@ -307,10 +314,10 @@ export default function ContractsManagement() {
 
             <div className="flex gap-3 pt-4">
               <Button type="button" variant="outline" className="flex-1 rounded-xl" onClick={() => setIsModalOpen(false)}>
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" className="flex-1 rounded-xl">
-                {editingContract ? 'Update' : 'Create'}
+                {editingContract ? 'Actualizar' : 'Crear'}
               </Button>
             </div>
           </form>

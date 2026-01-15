@@ -32,7 +32,7 @@ export function EnvironmentCard({ environment, onClick, variant = 'admin' }: Env
                 : 'status-rented'
             }`}
           >
-            {environment.status === 'available' ? 'Available' : 'Rented'}
+            {environment.status === 'available' ? 'Disponible' : 'Rentado'}
           </span>
         </div>
 
@@ -47,7 +47,7 @@ export function EnvironmentCard({ environment, onClick, variant = 'admin' }: Env
           </div>
           <div className="flex items-center gap-1.5">
             <MapPin className="h-4 w-4" />
-            <span>Floor {environment.floor}</span>
+            <span>Piso {environment.floor}</span>
           </div>
         </div>
 
@@ -55,7 +55,7 @@ export function EnvironmentCard({ environment, onClick, variant = 'admin' }: Env
           <div className="flex items-center gap-1.5 text-primary">
             <DollarSign className="h-5 w-5" />
             <span className="text-xl font-bold">{environment.rentalPrice.toLocaleString()}</span>
-            <span className="text-sm text-muted-foreground">/month</span>
+            <span className="text-sm text-muted-foreground">/mes</span>
           </div>
         </div>
       </div>

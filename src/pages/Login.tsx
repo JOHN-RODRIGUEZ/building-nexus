@@ -24,7 +24,7 @@ export default function Login() {
     e.preventDefault();
     
     if (!email || !password) {
-      toast.error('Please enter email and password');
+      toast.error('Por favor ingresa correo y contraseña');
       return;
     }
 
@@ -33,10 +33,10 @@ export default function Login() {
     setIsLoading(false);
 
     if (success) {
-      toast.success('Welcome back!');
+      toast.success('¡Bienvenido de nuevo!');
       navigate('/admin');
     } else {
-      toast.error('Invalid credentials');
+      toast.error('Credenciales inválidas');
     }
   };
 
@@ -64,13 +64,13 @@ export default function Login() {
             </div>
             
             <h1 className="text-5xl font-bold leading-tight mb-6">
-              Building Management<br />
-              Simplified
+              Gestión de Edificios<br />
+              Simplificada
             </h1>
             
             <p className="text-xl opacity-80 max-w-md">
-              A modern platform to manage your commercial building with ease. 
-              Track environments, contracts, and notifications all in one place.
+              Una plataforma moderna para gestionar tu edificio comercial con facilidad. 
+              Administra ambientes, contratos y notificaciones en un solo lugar.
             </p>
           </motion.div>
         </div>
@@ -92,30 +92,30 @@ export default function Login() {
           </div>
 
           <div className="text-center lg:text-left mb-8">
-            <h2 className="text-3xl font-bold mb-2">Welcome back</h2>
-            <p className="text-muted-foreground">Sign in to your admin account</p>
+            <h2 className="text-3xl font-bold mb-2">Bienvenido de nuevo</h2>
+            <p className="text-muted-foreground">Inicia sesión en tu cuenta de administrador</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Email</label>
+              <label className="text-sm font-medium">Correo Electrónico</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@building.com"
+                placeholder="admin@edificio.com"
                 className="input-futuristic w-full"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Password</label>
+              <label className="text-sm font-medium">Contraseña</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  placeholder="Ingresa tu contraseña"
                   className="input-futuristic w-full pr-12"
                 />
                 <button
@@ -136,16 +136,16 @@ export default function Login() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                  Signing in...
+                  Iniciando sesión...
                 </>
               ) : (
-                'Sign In'
+                'Iniciar Sesión'
               )}
             </Button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-8">
-            Enter any email and password to login (demo mode)
+            Ingresa cualquier correo y contraseña para iniciar sesión (modo demo)
           </p>
         </motion.div>
       </div>
