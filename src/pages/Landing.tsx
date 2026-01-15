@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Building2, ArrowRight, MapPin, Phone, Mail, Clock, Shield, Wifi, Car, Coffee } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Building2, ArrowRight, MapPin, Phone, Mail, Clock, Shield, Wifi, Car, Coffee, Menu, X } from 'lucide-react';
 import { useEnvironmentStore } from '@/stores/environmentStore';
 import { EnvironmentCard } from '@/components/EnvironmentCard';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import heroBuildingImage from '@/assets/hero-building.jpg';
 
 export default function LandingPage() {
   const { environments, fetchEnvironments } = useEnvironmentStore();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchEnvironments();
@@ -17,10 +18,16 @@ export default function LandingPage() {
   const availableEnvironments = environments.filter(e => e.status === 'available').slice(0, 3);
 
   const services = [
-    { icon: Shield, title: '24/7 Security', description: 'Round-the-clock security monitoring and access control' },
-    { icon: Wifi, title: 'High-Speed Internet', description: 'Fiber optic connectivity throughout the building' },
-    { icon: Car, title: 'Parking', description: 'Covered parking with reserved spots available' },
-    { icon: Coffee, title: 'Common Areas', description: 'Lounge, cafeteria, and meeting rooms' },
+    { icon: Shield, title: 'Seguridad 24/7', description: 'Monitoreo de seguridad y control de acceso las 24 horas' },
+    { icon: Wifi, title: 'Internet de Alta Velocidad', description: 'Conectividad de fibra óptica en todo el edificio' },
+    { icon: Car, title: 'Estacionamiento', description: 'Estacionamiento cubierto con espacios reservados disponibles' },
+    { icon: Coffee, title: 'Áreas Comunes', description: 'Sala de estar, cafetería y salas de reuniones' },
+  ];
+
+  const navLinks = [
+    { href: '#spaces', label: 'Espacios' },
+    { href: '#services', label: 'Servicios' },
+    { href: '#contact', label: 'Contacto' },
   ];
 
   return (
@@ -36,17 +43,63 @@ export default function LandingPage() {
           </Link>
           
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#spaces" className="text-muted-foreground hover:text-foreground transition-colors">Spaces</a>
-            <a href="#services" className="text-muted-foreground hover:text-foreground transition-colors">Services</a>
-            <a href="#contact" className="text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+            {navLinks.map((link) => (
+              <a key={link.href} href={link.href} className="text-muted-foreground hover:text-foreground transition-colors">
+                {link.label}
+              </a>
+            ))}
           </nav>
 
-          <Link to="/login">
-            <Button variant="outline" className="rounded-xl">
-              Admin Login
+          <div className="flex items-center gap-2">
+            <Link to="/login" className="hidden md:block">
+              <Button variant="outline" className="rounded-xl">
+                Acceso Admin
+              </Button>
+            </Link>
+            
+            {/* Mobile Menu Toggle */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden rounded-xl"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
-          </Link>
+          </div>
         </div>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-background border-b border-border overflow-hidden"
+            >
+              <nav className="flex flex-col p-4 gap-2">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="nav-link"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <Link
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="nav-link text-primary"
+                >
+                  Acceso Admin
+                </Link>
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Hero Section */}
@@ -54,7 +107,7 @@ export default function LandingPage() {
         <div className="absolute inset-0">
           <img
             src={heroBuildingImage}
-            alt="Modern office building"
+            alt="Edificio de oficinas moderno"
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-foreground/70" />
@@ -67,22 +120,22 @@ export default function LandingPage() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-              Premium Office Spaces<br />
-              <span className="text-primary">for Modern Business</span>
+              Espacios de Oficina Premium<br />
+              <span className="text-primary">para Negocios Modernos</span>
             </h1>
             <p className="text-xl md:text-2xl text-primary-foreground/80 max-w-2xl mx-auto mb-10">
-              State-of-the-art commercial spaces designed for productivity and success. 
-              Find your perfect workspace today.
+              Espacios comerciales de última generación diseñados para la productividad y el éxito. 
+              Encuentra tu espacio de trabajo perfecto hoy.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="#spaces">
-                <Button size="lg" className="rounded-xl text-lg px-8 h-14 gap-2">
-                  Explore Spaces <ArrowRight className="h-5 w-5" />
+                <Button size="lg" className="rounded-xl text-lg px-8 h-14 gap-2 w-full sm:w-auto">
+                  Explorar Espacios <ArrowRight className="h-5 w-5" />
                 </Button>
               </a>
               <a href="#contact">
-                <Button size="lg" variant="outline" className="rounded-xl text-lg px-8 h-14 bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20">
-                  Contact Us
+                <Button size="lg" variant="outline" className="rounded-xl text-lg px-8 h-14 bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 w-full sm:w-auto">
+                  Contáctanos
                 </Button>
               </a>
             </div>
@@ -115,15 +168,15 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Available Spaces</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Espacios Disponibles</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover our selection of premium office environments ready for immediate occupancy
+              Descubre nuestra selección de ambientes de oficina premium listos para ocupación inmediata
             </p>
           </motion.div>
 
           {availableEnvironments.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-muted-foreground text-lg">No spaces currently available</p>
+              <p className="text-muted-foreground text-lg">No hay espacios disponibles actualmente</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -144,7 +197,7 @@ export default function LandingPage() {
           <div className="text-center mt-12">
             <a href="#contact">
               <Button variant="outline" size="lg" className="rounded-xl gap-2">
-                View All Spaces <ArrowRight className="h-5 w-5" />
+                Ver Todos los Espacios <ArrowRight className="h-5 w-5" />
               </Button>
             </a>
           </div>
@@ -160,9 +213,9 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Building Amenities</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Amenidades del Edificio</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Everything you need for a productive and comfortable work environment
+              Todo lo que necesitas para un ambiente de trabajo productivo y cómodo
             </p>
           </motion.div>
 
@@ -196,10 +249,10 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Get in Touch</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Ponte en Contacto</h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Ready to find your perfect office space? Contact us today to schedule a tour 
-                or learn more about our available environments.
+                ¿Listo para encontrar tu espacio de oficina perfecto? Contáctanos hoy para agendar un recorrido 
+                o conocer más sobre nuestros ambientes disponibles.
               </p>
 
               <div className="space-y-6">
@@ -208,10 +261,10 @@ export default function LandingPage() {
                     <MapPin className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">Location</h3>
+                    <h3 className="font-semibold mb-1">Ubicación</h3>
                     <p className="text-muted-foreground">
-                      123 Business District Avenue<br />
-                      Downtown, City 10001
+                      Av. Distrito Empresarial 123<br />
+                      Centro, Ciudad 10001
                     </p>
                   </div>
                 </div>
@@ -221,8 +274,8 @@ export default function LandingPage() {
                     <Phone className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">Phone</h3>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                    <h3 className="font-semibold mb-1">Teléfono</h3>
+                    <p className="text-muted-foreground">+52 (555) 123-4567</p>
                   </div>
                 </div>
 
@@ -231,8 +284,8 @@ export default function LandingPage() {
                     <Mail className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">Email</h3>
-                    <p className="text-muted-foreground">leasing@buildingos.com</p>
+                    <h3 className="font-semibold mb-1">Correo Electrónico</h3>
+                    <p className="text-muted-foreground">arrendamiento@buildingos.com</p>
                   </div>
                 </div>
 
@@ -241,10 +294,10 @@ export default function LandingPage() {
                     <Clock className="h-6 w-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">Office Hours</h3>
+                    <h3 className="font-semibold mb-1">Horario de Oficina</h3>
                     <p className="text-muted-foreground">
-                      Mon–Fri: 9:00 AM – 6:00 PM<br />
-                      Sat: 10:00 AM – 2:00 PM
+                      Lun–Vie: 9:00 AM – 6:00 PM<br />
+                      Sáb: 10:00 AM – 2:00 PM
                     </p>
                   </div>
                 </div>
@@ -257,44 +310,44 @@ export default function LandingPage() {
               viewport={{ once: true }}
               className="card-elevated p-8"
             >
-              <h3 className="text-xl font-semibold mb-6">Send us a Message</h3>
+              <h3 className="text-xl font-semibold mb-6">Envíanos un Mensaje</h3>
               <form className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Name</label>
+                    <label className="text-sm font-medium">Nombre</label>
                     <input
                       type="text"
-                      placeholder="Your name"
+                      placeholder="Tu nombre"
                       className="input-futuristic w-full"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Email</label>
+                    <label className="text-sm font-medium">Correo</label>
                     <input
                       type="email"
-                      placeholder="your@email.com"
+                      placeholder="tu@correo.com"
                       className="input-futuristic w-full"
                     />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Subject</label>
+                  <label className="text-sm font-medium">Asunto</label>
                   <input
                     type="text"
-                    placeholder="How can we help?"
+                    placeholder="¿Cómo podemos ayudarte?"
                     className="input-futuristic w-full"
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Message</label>
+                  <label className="text-sm font-medium">Mensaje</label>
                   <textarea
-                    placeholder="Tell us about your needs..."
+                    placeholder="Cuéntanos sobre tus necesidades..."
                     rows={4}
                     className="input-futuristic w-full py-3"
                   />
                 </div>
                 <Button type="submit" className="w-full rounded-xl h-12 text-base">
-                  Send Message
+                  Enviar Mensaje
                 </Button>
               </form>
             </motion.div>
@@ -312,7 +365,7 @@ export default function LandingPage() {
             <span className="font-bold">BuildingOS</span>
           </div>
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} BuildingOS. All rights reserved.
+            © {new Date().getFullYear()} BuildingOS. Todos los derechos reservados.
           </p>
         </div>
       </footer>

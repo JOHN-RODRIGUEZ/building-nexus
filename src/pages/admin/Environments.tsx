@@ -73,10 +73,10 @@ export default function EnvironmentsManagement() {
 
     if (editingEnv) {
       updateEnvironment(editingEnv.id, envData);
-      toast.success('Environment updated successfully');
+      toast.success('Ambiente actualizado exitosamente');
     } else {
       addEnvironment(envData);
-      toast.success('Environment created successfully');
+      toast.success('Ambiente creado exitosamente');
     }
     
     setIsModalOpen(false);
@@ -84,7 +84,7 @@ export default function EnvironmentsManagement() {
 
   const handleDelete = (id: string) => {
     deleteEnvironment(id);
-    toast.success('Environment deleted');
+    toast.success('Ambiente eliminado');
   };
 
   const addPhotoField = () => {
@@ -117,12 +117,12 @@ export default function EnvironmentsManagement() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Environments</h1>
-            <p className="text-muted-foreground">Manage your building spaces and galleries</p>
+            <h1 className="text-3xl font-bold mb-2">Ambientes</h1>
+            <p className="text-muted-foreground">Gestiona los espacios y galerías de tu edificio</p>
           </div>
           <Button onClick={() => handleOpenModal()} className="rounded-xl gap-2">
             <Plus className="h-5 w-5" />
-            Add Environment
+            Agregar Ambiente
           </Button>
         </div>
       </motion.div>
@@ -132,7 +132,7 @@ export default function EnvironmentsManagement() {
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Search environments..."
+          placeholder="Buscar ambientes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="input-futuristic w-full pl-12"
@@ -148,7 +148,7 @@ export default function EnvironmentsManagement() {
         </div>
       ) : filteredEnvironments.length === 0 ? (
         <div className="text-center py-16">
-          <p className="text-muted-foreground text-lg">No environments found</p>
+          <p className="text-muted-foreground text-lg">No se encontraron ambientes</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -183,13 +183,13 @@ export default function EnvironmentsManagement() {
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {editingEnv ? 'Edit Environment' : 'New Environment'}
+              {editingEnv ? 'Editar Ambiente' : 'Nuevo Ambiente'}
             </DialogTitle>
           </DialogHeader>
           
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
+              <label className="text-sm font-medium">Nombre</label>
               <input
                 type="text"
                 value={formData.name}
@@ -200,7 +200,7 @@ export default function EnvironmentsManagement() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">Descripción</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
@@ -211,19 +211,19 @@ export default function EnvironmentsManagement() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Status</label>
+                <label className="text-sm font-medium">Estado</label>
                 <select
                   value={formData.status}
                   onChange={(e) => setFormData(prev => ({ ...prev, status: e.target.value as 'available' | 'rented' }))}
                   className="input-futuristic w-full"
                 >
-                  <option value="available">Available</option>
-                  <option value="rented">Rented</option>
+                  <option value="available">Disponible</option>
+                  <option value="rented">Rentado</option>
                 </select>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Rental Price ($/mo)</label>
+                <label className="text-sm font-medium">Precio Renta ($/mes)</label>
                 <input
                   type="number"
                   value={formData.rentalPrice}
@@ -237,7 +237,7 @@ export default function EnvironmentsManagement() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Area (m²)</label>
+                <label className="text-sm font-medium">Área (m²)</label>
                 <input
                   type="number"
                   value={formData.area}
@@ -249,7 +249,7 @@ export default function EnvironmentsManagement() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Floor</label>
+                <label className="text-sm font-medium">Piso</label>
                 <input
                   type="number"
                   value={formData.floor}
@@ -263,9 +263,9 @@ export default function EnvironmentsManagement() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium">Photo URLs</label>
+                <label className="text-sm font-medium">URLs de Fotos</label>
                 <Button type="button" variant="ghost" size="sm" onClick={addPhotoField}>
-                  <Plus className="h-4 w-4 mr-1" /> Add Photo
+                  <Plus className="h-4 w-4 mr-1" /> Agregar Foto
                 </Button>
               </div>
               {formData.photos.map((photo, index) => (
@@ -293,10 +293,10 @@ export default function EnvironmentsManagement() {
 
             <div className="flex gap-3 pt-4">
               <Button type="button" variant="outline" className="flex-1 rounded-xl" onClick={() => setIsModalOpen(false)}>
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" className="flex-1 rounded-xl">
-                {editingEnv ? 'Update' : 'Create'}
+                {editingEnv ? 'Actualizar' : 'Crear'}
               </Button>
             </div>
           </form>

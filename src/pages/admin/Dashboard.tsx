@@ -6,6 +6,7 @@ import { useContractStore } from '@/stores/contractStore';
 import { useNotificationStore, Notification } from '@/stores/notificationStore';
 import { StatCard } from '@/components/StatCard';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 export default function AdminDashboard() {
   const { environments, fetchEnvironments, isLoading: envLoading } = useEnvironmentStore();
@@ -43,37 +44,37 @@ export default function AdminDashboard() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">Welcome back! Here's an overview of your building.</p>
+        <h1 className="text-3xl font-bold mb-2">Panel de Control</h1>
+        <p className="text-muted-foreground">¡Bienvenido! Aquí tienes un resumen de tu edificio.</p>
       </motion.div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
-          title="Total Environments"
+          title="Total Ambientes"
           value={environments.length}
-          subtitle="Managed spaces"
+          subtitle="Espacios gestionados"
           icon={Building2}
           variant="default"
         />
         <StatCard
-          title="Available"
+          title="Disponibles"
           value={availableEnvs}
-          subtitle="Ready to rent"
+          subtitle="Listos para rentar"
           icon={TrendingUp}
           variant="success"
         />
         <StatCard
-          title="Active Contracts"
+          title="Contratos Activos"
           value={activeContracts.length}
-          subtitle="Currently running"
+          subtitle="En curso actualmente"
           icon={FileText}
           variant="primary"
         />
         <StatCard
-          title="Expiring Soon"
+          title="Por Vencer"
           value={expiringContracts.length}
-          subtitle="Within 30 days"
+          subtitle="En los próximos 30 días"
           icon={AlertCircle}
           variant="warning"
         />
@@ -89,12 +90,12 @@ export default function AdminDashboard() {
         >
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <AlertCircle className="h-5 w-5 text-warning" />
-            Contracts Expiring Soon
+            Contratos por Vencer
           </h2>
           
           {expiringContracts.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              No contracts expiring in the next 30 days
+              No hay contratos por vencer en los próximos 30 días
             </p>
           ) : (
             <div className="space-y-3">
@@ -109,7 +110,7 @@ export default function AdminDashboard() {
                       <p className="text-sm text-muted-foreground">{contract.tenantName}</p>
                     </div>
                     <span className="text-sm text-warning font-medium">
-                      Expires {format(new Date(contract.endDate), 'MMM d, yyyy')}
+                      Vence {format(new Date(contract.endDate), "d 'de' MMM, yyyy", { locale: es })}
                     </span>
                   </div>
                 </div>
@@ -127,12 +128,12 @@ export default function AdminDashboard() {
         >
           <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <Bell className="h-5 w-5 text-primary" />
-            Recent Notifications
+            Notificaciones Recientes
           </h2>
           
           {recentNotifications.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              No notifications yet
+              Aún no hay notificaciones
             </p>
           ) : (
             <div className="space-y-3">

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Bell, Check, CheckCheck, AlertCircle, Info } from 'lucide-react';
 import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { useNotificationStore, Notification } from '@/stores/notificationStore';
 import { Button } from '@/components/ui/button';
 
@@ -31,10 +32,10 @@ export default function NotificationsPage() {
     const then = new Date(date);
     const diffInHours = Math.floor((now.getTime() - then.getTime()) / (1000 * 60 * 60));
     
-    if (diffInHours < 1) return 'Just now';
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffInHours < 48) return 'Yesterday';
-    return format(then, 'MMM d');
+    if (diffInHours < 1) return 'Justo ahora';
+    if (diffInHours < 24) return `Hace ${diffInHours}h`;
+    if (diffInHours < 48) return 'Ayer';
+    return format(then, "d 'de' MMM", { locale: es });
   };
 
   return (
@@ -46,17 +47,17 @@ export default function NotificationsPage() {
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Notifications</h1>
+            <h1 className="text-3xl font-bold mb-2">Notificaciones</h1>
             <p className="text-muted-foreground">
               {unreadCount > 0 
-                ? `You have ${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}`
-                : 'All caught up!'}
+                ? `Tienes ${unreadCount} notificación${unreadCount > 1 ? 'es' : ''} sin leer`
+                : '¡Todo al día!'}
             </p>
           </div>
           {unreadCount > 0 && (
             <Button onClick={markAllAsRead} variant="outline" className="rounded-xl gap-2">
               <CheckCheck className="h-4 w-4" />
-              Mark all as read
+              Marcar todas como leídas
             </Button>
           )}
         </div>
@@ -65,7 +66,7 @@ export default function NotificationsPage() {
       {notifications.length === 0 ? (
         <div className="text-center py-16">
           <Bell className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
-          <p className="text-muted-foreground text-lg">No notifications yet</p>
+          <p className="text-muted-foreground text-lg">Aún no hay notificaciones</p>
         </div>
       ) : (
         <div className="space-y-3">
