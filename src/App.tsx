@@ -8,7 +8,7 @@ import { useAuthStore } from "@/stores/authStore";
 
 // Pages
 import Landing from "./pages/Landing";
-import Login from "./pages/Login";
+import BusinessProfile from "./pages/BusinessProfile";
 import NotFound from "./pages/NotFound";
 
 // Admin
@@ -17,6 +17,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import Environments from "./pages/admin/Environments";
 import Contracts from "./pages/admin/Contracts";
 import Notifications from "./pages/admin/Notifications";
+import Businesses from "./pages/admin/Businesses";
 
 const queryClient = new QueryClient();
 
@@ -42,7 +43,7 @@ function AppContent() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/negocio/:id" element={<BusinessProfile />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
@@ -50,6 +51,7 @@ function AppContent() {
           <Route path="environments" element={<Environments />} />
           <Route path="contracts" element={<Contracts />} />
           <Route path="notifications" element={<Notifications />} />
+          <Route path="businesses" element={<Businesses />} />
         </Route>
 
         {/* 404 */}
