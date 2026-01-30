@@ -16,6 +16,7 @@ import {
   Home,
   FileText,
   BellRing,
+  Store,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuthStore } from '@/stores/authStore';
@@ -33,6 +34,7 @@ import { Button } from '@/components/ui/button';
 const navItems = [
   { path: '/admin', label: 'Panel', icon: LayoutDashboard },
   { path: '/admin/environments', label: 'Ambientes', icon: Home },
+  { path: '/admin/businesses', label: 'Negocios', icon: Store },
   { path: '/admin/contracts', label: 'Contratos', icon: FileText },
   { path: '/admin/notifications', label: 'Notificaciones', icon: BellRing },
 ];

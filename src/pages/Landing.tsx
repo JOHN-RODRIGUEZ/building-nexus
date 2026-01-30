@@ -1,21 +1,28 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building2, ArrowRight, MapPin, Phone, Mail, Clock, Shield, Wifi, Car, Coffee, Menu, X } from 'lucide-react';
+import { Building2, MapPin, Phone, Mail, Clock, Shield, Wifi, Car, Coffee, Menu, X, Store } from 'lucide-react';
 import { useEnvironmentStore } from '@/stores/environmentStore';
+import { useBusinessStore } from '@/stores/businessStore';
 import { EnvironmentCard } from '@/components/EnvironmentCard';
+import { BusinessCard } from '@/components/BusinessCard';
+import { HeroCarousel } from '@/components/HeroCarousel';
+import { LoginModal } from '@/components/LoginModal';
 import { Button } from '@/components/ui/button';
-import heroBuildingImage from '@/assets/hero-building.jpg';
 
 export default function LandingPage() {
   const { environments, fetchEnvironments } = useEnvironmentStore();
+  const { businesses, fetchBusinesses } = useBusinessStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   useEffect(() => {
     fetchEnvironments();
-  }, [fetchEnvironments]);
+    fetchBusinesses();
+  }, [fetchEnvironments, fetchBusinesses]);
 
   const availableEnvironments = environments.filter(e => e.status === 'available').slice(0, 3);
+  const activeBusinesses = businesses.filter(b => b.status === 'active').slice(0, 6);
 
   const services = [
     { icon: Shield, title: 'Seguridad 24/7', description: 'Monitoreo de seguridad y control de acceso las 24 horas' },
@@ -25,10 +32,18 @@ export default function LandingPage() {
   ];
 
   const navLinks = [
+    { href: '#businesses', label: 'Negocios' },
     { href: '#spaces', label: 'Espacios' },
     { href: '#services', label: 'Servicios' },
     { href: '#contact', label: 'Contacto' },
   ];
+
+  const scrollToSection = (id: string) => {
+    const element = document.querySelector(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,18 +59,24 @@ export default function LandingPage() {
           
           <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} className="text-muted-foreground hover:text-foreground transition-colors">
+              <a 
+                key={link.href} 
+                href={link.href} 
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
                 {link.label}
               </a>
             ))}
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link to="/login" className="hidden md:block">
-              <Button variant="outline" className="rounded-xl">
-                Acceso Admin
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="hidden md:flex rounded-xl"
+              onClick={() => setLoginModalOpen(true)}
+            >
+              Acceso Admin
+            </Button>
             
             {/* Mobile Menu Toggle */}
             <Button
@@ -89,74 +110,66 @@ export default function LandingPage() {
                     {link.label}
                   </a>
                 ))}
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="nav-link text-primary"
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setLoginModalOpen(true);
+                  }}
+                  className="nav-link text-primary text-left"
                 >
                   Acceso Admin
-                </Link>
+                </button>
               </nav>
             </motion.div>
           )}
         </AnimatePresence>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={heroBuildingImage}
-            alt="Edificio de oficinas moderno"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-foreground/70" />
-        </div>
-        
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
-              Espacios de Oficina Premium<br />
-              <span className="text-primary">para Negocios Modernos</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-primary-foreground/80 max-w-2xl mx-auto mb-10">
-              Espacios comerciales de última generación diseñados para la productividad y el éxito. 
-              Encuentra tu espacio de trabajo perfecto hoy.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="#spaces">
-                <Button size="lg" className="rounded-xl text-lg px-8 h-14 gap-2 w-full sm:w-auto">
-                  Explorar Espacios <ArrowRight className="h-5 w-5" />
-                </Button>
-              </a>
-              <a href="#contact">
-                <Button size="lg" variant="outline" className="rounded-xl text-lg px-8 h-14 bg-primary-foreground/10 text-primary-foreground border-primary-foreground/30 hover:bg-primary-foreground/20 w-full sm:w-auto">
-                  Contáctanos
-                </Button>
-              </a>
-            </div>
-          </motion.div>
-        </div>
+      {/* Hero Carousel */}
+      <HeroCarousel 
+        onExplore={() => scrollToSection('#businesses')}
+        onContact={() => scrollToSection('#contact')}
+      />
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <div className="w-6 h-10 rounded-full border-2 border-primary-foreground/40 flex justify-center pt-2">
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-              className="w-1.5 h-3 rounded-full bg-primary-foreground/60"
-            />
-          </div>
-        </motion.div>
+      {/* Businesses Section */}
+      <section id="businesses" className="py-20 lg:py-32 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
+              <Store className="h-4 w-4" />
+              <span className="text-sm font-medium">Directorio de Negocios</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Negocios en el Edificio</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Descubre la variedad de negocios y servicios disponibles en nuestra galería comercial
+            </p>
+          </motion.div>
+
+          {activeBusinesses.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-muted-foreground text-lg">No hay negocios disponibles actualmente</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {activeBusinesses.map((business, index) => (
+                <motion.div
+                  key={business.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <BusinessCard business={business} variant="public" />
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
       </section>
 
       {/* Available Spaces */}
@@ -197,7 +210,7 @@ export default function LandingPage() {
           <div className="text-center mt-12">
             <a href="#contact">
               <Button variant="outline" size="lg" className="rounded-xl gap-2">
-                Ver Todos los Espacios <ArrowRight className="h-5 w-5" />
+                Consultar Disponibilidad
               </Button>
             </a>
           </div>
@@ -369,6 +382,9 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+
+      {/* Login Modal */}
+      <LoginModal open={loginModalOpen} onOpenChange={setLoginModalOpen} />
     </div>
   );
 }
